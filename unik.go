@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type Generator interface {
+type Interface interface {
 	Snowflake() string
 	SnowflakeID(id int) string
 	BSON() string
@@ -19,7 +19,7 @@ type unik struct {
 	snowflakes []*gosnow.SnowFlake
 }
 
-func New() Generator {
+func New() Interface {
 	snowflakes := make([]*gosnow.SnowFlake, 200)
 	snowflakes[0], _ = gosnow.NewSnowFlake(uint32(0))
 	return &unik{
