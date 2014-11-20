@@ -1,7 +1,6 @@
-package unik_test
+package unik
 
 import (
-	. "github.com/plimble/unik"
 	"testing"
 )
 
