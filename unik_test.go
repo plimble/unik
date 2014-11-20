@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestSnowflake(t *testing.T) {
+func TestGenerateID(t *testing.T) {
 	idgen := New()
 	idgen.Snowflake()
 	idgen.SnowflakeID(120)
