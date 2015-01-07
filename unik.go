@@ -3,57 +3,59 @@ package unik
 import (
 	"github.com/satori/go.uuid"
 	"github.com/sdming/gosnow"
-	"gopkg.in/mgo.v2/bson"
+	mgo "gopkg.in/mgo.v2/bson"
 	"strconv"
 )
 
-type Interface interface {
-	Snowflake() string
-	SnowflakeID(id int) string
-	BSON() string
-	UUIDV1() string
-	UUIDV4() string
+//go:generate mockgen -destination=mock.go -package=unik github.com/plimble/unik Generator
+
+type Generator interface {
+	Generate() string
 }
 
-type unik struct {
-	snowflakes []*gosnow.SnowFlake
+type snowflake struct {
+	gosnow *gosnow.SnowFlake
 }
 
-func New() Interface {
-	snowflakes := make([]*gosnow.SnowFlake, 200)
-	snowflakes[0], _ = gosnow.NewSnowFlake(uint32(0))
-	return &unik{
-		snowflakes: snowflakes,
+func NewSnowflake(index int) Generator {
+	gosnow, err := gosnow.NewSnowFlake(uint32(index))
+	if err != nil {
+		panic(err)
 	}
+	return &snowflake{gosnow}
 }
 
-func (u *unik) Snowflake() string {
-	result, _ := u.snowflakes[0].Next()
+func (g *snowflake) Generate() string {
+	result, _ := g.gosnow.Next()
 	return strconv.FormatInt(int64(result), 10)
 }
 
-func (u *unik) SnowflakeID(id int) string {
-	if id > 200 {
-		id = 0
-	}
+type uuidv1 struct{}
 
-	if u.snowflakes[id] == nil {
-		u.snowflakes[id], _ = gosnow.NewSnowFlake(uint32(id))
-	}
-
-	result, _ := u.snowflakes[id].Next()
-
-	return strconv.FormatInt(int64(result), 10)
+func NewUUIDV1() Generator {
+	return &uuidv1{}
 }
 
-func (u *unik) BSON() string {
-	return bson.NewObjectId().Hex()
-}
-
-func (u *unik) UUIDV1() string {
+func (g *uuidv1) Generate() string {
 	return uuid.NewV1().String()
 }
 
-func (u *unik) UUIDV4() string {
+type uuidv4 struct{}
+
+func NewUUIDV4() Generator {
+	return &uuidv4{}
+}
+
+func (g *uuidv4) Generate() string {
 	return uuid.NewV4().String()
+}
+
+type bson struct{}
+
+func NewBSON() Generator {
+	return &bson{}
+}
+
+func (g *bson) Generate() string {
+	return mgo.NewObjectId().Hex()
 }
