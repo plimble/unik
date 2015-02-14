@@ -1,10 +1,12 @@
 package unik
 
 import (
+	"encoding/base64"
 	"github.com/satori/go.uuid"
 	"github.com/sdming/gosnow"
 	mgo "gopkg.in/mgo.v2/bson"
 	"strconv"
+	"strings"
 )
 
 //go:generate mockgen -destination=mock.go -package=unik github.com/plimble/unik Generator
@@ -37,7 +39,7 @@ func NewUUIDV1() Generator {
 }
 
 func (g *uuidv1) Generate() string {
-	return uuid.NewV1().String()
+	return string(uuid.NewV1().Bytes())
 }
 
 type uuidv4 struct{}
@@ -47,7 +49,19 @@ func NewUUIDV4() Generator {
 }
 
 func (g *uuidv4) Generate() string {
-	return uuid.NewV4().String()
+	return string(uuid.NewV4().Bytes())
+}
+
+type uuid1base64 struct{}
+
+func NewUUID1Base64() Generator {
+	return &uuid1base64{}
+}
+
+func (g *uuid1base64) Generate() string {
+	id := base64.URLEncoding.EncodeToString(uuid.NewV1().Bytes())
+	id = strings.TrimRight(id, "=")
+	return id
 }
 
 type bson struct{}
