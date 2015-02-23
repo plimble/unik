@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-//go:generate mockery -name Generator
+//go:generate mockgen -destination=mock_unik/mock_generate.go github.com/plimble/unik Generator
 
 type Generator interface {
 	Generate() string
