@@ -1,6 +1,7 @@
 package unik
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -8,13 +9,13 @@ func TestGenerateID(t *testing.T) {
 	bson := NewBSON()
 	bson.Generate()
 	sf := NewSnowflake(0)
-	sf.Generate()
+	fmt.Println("snowflake:", sf.Generate())
 	u1 := NewUUIDV1()
-	u1.Generate()
+	fmt.Println("uuid1:", u1.Generate())
 	u4 := NewUUIDV4()
-	u4.Generate()
+	fmt.Println("uuid4:", u4.Generate())
 	u1b64 := NewUUID1Base64()
-	u1b64.Generate()
+	fmt.Println("uuid1 base64:", u1b64.Generate())
 }
 
 func BenchmarkBSON(b *testing.B) {

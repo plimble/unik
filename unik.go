@@ -39,7 +39,7 @@ func NewUUIDV1() Generator {
 }
 
 func (g *uuidv1) Generate() string {
-	return string(uuid.NewV1().Bytes())
+	return uuid.NewV1().String()
 }
 
 type uuidv4 struct{}
@@ -49,7 +49,7 @@ func NewUUIDV4() Generator {
 }
 
 func (g *uuidv4) Generate() string {
-	return string(uuid.NewV4().Bytes())
+	return uuid.NewV4().String()
 }
 
 type uuid1base64 struct{}
