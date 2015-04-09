@@ -2,6 +2,8 @@ package unik
 
 import (
 	"encoding/base64"
+	"encoding/hex"
+	"github.com/plimble/utils/strings2"
 	"github.com/satori/go.uuid"
 	"github.com/sdming/gosnow"
 	mgo "gopkg.in/mgo.v2/bson"
@@ -39,7 +41,11 @@ func NewUUIDV1() Generator {
 }
 
 func (g *uuidv1) Generate() string {
-	return uuid.NewV1().String()
+	v1 := uuid.NewV1()
+	data := v1.Bytes()
+	buf := make([]byte, 32)
+	hex.Encode(buf, data)
+	return string2.BytesToString(buf)
 }
 
 type uuidv4 struct{}
@@ -49,7 +55,11 @@ func NewUUIDV4() Generator {
 }
 
 func (g *uuidv4) Generate() string {
-	return uuid.NewV4().String()
+	v4 := uuid.NewV4()
+	data := v4.Bytes()
+	buf := make([]byte, 32)
+	hex.Encode(buf, data)
+	return string2.BytesToString(buf)
 }
 
 type uuid1base64 struct{}
