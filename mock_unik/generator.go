@@ -2,18 +2,19 @@ package mock_unik
 
 import "github.com/stretchr/testify/mock"
 
-type MockGenerator struct {
+type Generator struct {
 	mock.Mock
 }
 
-func NewMockGenerator() *MockGenerator {
-	return &MockGenerator{}
-}
+func (_m *Generator) Generate() string {
+	ret := _m.Called()
 
-func (m *MockGenerator) Generate() string {
-	ret := m.Called()
-
-	r0 := ret.Get(0).(string)
+	var r0 string
+	if rf, ok := ret.Get(0).(func() string); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
 
 	return r0
 }
