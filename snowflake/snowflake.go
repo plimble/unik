@@ -1,23 +1,31 @@
 package snowflake
 
 import (
-	"github.com/sdming/gosnow"
+	"github.com/tinode/snowflake"
 	"strconv"
 )
 
-type Snowflake struct {
-	gosnow *gosnow.SnowFlake
+var GenFunc func() string
+var sf *snowflake.SnowFlake
+
+func init() {
+	Snowflake(1)
 }
 
-func New(index int) *Snowflake {
-	gosnow, err := gosnow.NewSnowFlake(uint32(index))
-	if err != nil {
-		panic(err)
+func Gen() string {
+	return GenFunc()
+}
+
+func Snowflake(machine uint32) {
+	sf, _ = snowflake.NewSnowFlake(machine)
+	GenFunc = func() string {
+		idInt, _ := sf.Next()
+		return strconv.FormatUint(idInt, 10)
 	}
-	return &Snowflake{gosnow}
 }
 
-func (g *Snowflake) Generate() string {
-	result, _ := g.gosnow.Next()
-	return strconv.FormatInt(int64(result), 10)
+func Mock(id string) {
+	GenFunc = func() string {
+		return id
+	}
 }

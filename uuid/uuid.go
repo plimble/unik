@@ -1,47 +1,33 @@
 package uuid
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 	"github.com/satori/go.uuid"
-	"strings"
 )
 
-type UUIDV1 struct{}
+var GenFunc func() string
 
-func NewV1() *UUIDV1 {
-	return &UUIDV1{}
+func init() {
+	UUIDV1()
 }
 
-func (g *UUIDV1) Generate() string {
-	v1 := uuid.NewV1()
-	data := v1.Bytes()
-	buf := make([]byte, 32)
-	hex.Encode(buf, data)
-	return string(buf)
+func Gen() string {
+	return GenFunc()
 }
 
-type UUIDV4 struct{}
-
-func NewV4() *UUIDV4 {
-	return &UUIDV4{}
+func UUIDV1() {
+	GenFunc = func() string {
+		return uuid.NewV1().String()
+	}
 }
 
-func (g *UUIDV4) Generate() string {
-	v4 := uuid.NewV4()
-	data := v4.Bytes()
-	buf := make([]byte, 32)
-	hex.Encode(buf, data)
-	return string(buf)
+func UUIDV4() {
+	GenFunc = func() string {
+		return uuid.NewV4().String()
+	}
 }
 
-type UUID1Base64 struct{}
-
-func NewV1Base64() *UUID1Base64 {
-	return &UUID1Base64{}
-}
-
-func (g *UUID1Base64) Generate() string {
-	id := base64.URLEncoding.EncodeToString(uuid.NewV1().Bytes())
-	return strings.TrimRight(id, "=")
+func Mock(id string) {
+	GenFunc = func() string {
+		return id
+	}
 }
