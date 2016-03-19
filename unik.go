@@ -1,13 +1,16 @@
-package uuid
+package unik
 
 import (
 	"github.com/satori/go.uuid"
+	"github.com/tinode/snowflake"
+	"strconv"
 )
 
 var GenFunc func() string
+var sf *snowflake.SnowFlake
 
 func init() {
-	UUIDV1()
+	Snowflake(1)
 }
 
 func Gen() string {
@@ -23,6 +26,14 @@ func UUIDV1() {
 func UUIDV4() {
 	GenFunc = func() string {
 		return uuid.NewV4().String()
+	}
+}
+
+func Snowflake(machine uint32) {
+	sf, _ = snowflake.NewSnowFlake(machine)
+	GenFunc = func() string {
+		idInt, _ := sf.Next()
+		return strconv.FormatUint(idInt, 10)
 	}
 }
 
