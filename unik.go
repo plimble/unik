@@ -8,7 +8,7 @@ import (
 )
 
 var GenFunc func() string
-var GenUInt64Func func() uint64
+var GenInt64Func func() int64
 var sf *snowflake.SnowFlake
 
 func init() {
@@ -19,8 +19,8 @@ func Gen() string {
 	return GenFunc()
 }
 
-func GenUInt64() uint64 {
-	return GenUInt64Func()
+func GenInt64() int64 {
+	return GenInt64Func()
 }
 
 func UUIDV1() {
@@ -42,9 +42,9 @@ func Snowflake(machine uint32) {
 		return strconv.FormatUint(idInt, 10)
 	}
 
-	GenUInt64Func = func() uint64 {
+	GenInt64Func = func() int64 {
 		idInt, _ := sf.Next()
-		return idInt
+		return int64(idInt)
 	}
 }
 

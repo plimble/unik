@@ -29,4 +29,6 @@ func TestSnowflake(t *testing.T) {
 	if len(id) != 18 {
 		t.Error("Error Snowflake")
 	}
+
+	_ = GenInt64()
 }
